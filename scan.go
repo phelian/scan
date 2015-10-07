@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package bufio
+package scan
 
 import (
 	"bytes"
@@ -68,16 +68,17 @@ const (
 	// MaxScanTokenSize is the maximum size used to buffer a token.
 	// The actual maximum token size may be smaller as the buffer
 	// may need to include, for instance, a newline.
-	MaxScanTokenSize = 64 * 1024
+	MaxScanTokenSize         = 64 * 1024
+	maxConsecutiveEmptyReads = 100
 )
 
 // NewScanner returns a new Scanner to read from r.
 // The split function defaults to ScanLines.
-func NewScanner(r io.Reader) *Scanner {
+func New(r io.Reader, maxScanTokenSize int) *Scanner {
 	return &Scanner{
 		r:            r,
 		split:        ScanLines,
-		maxTokenSize: MaxScanTokenSize,
+		maxTokenSize: maxScanTokenSize,
 		buf:          make([]byte, 4096), // Plausible starting size; needn't be large.
 	}
 }
